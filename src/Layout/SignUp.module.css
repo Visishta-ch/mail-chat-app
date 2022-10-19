@@ -5,6 +5,7 @@
 }
 
 
+
 section{
     position: relative;
     overflow: hidden;
@@ -30,6 +31,8 @@ header{
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
     font-size:25px;
     padding:10px;
+    display:flex;
+    justify-content: center;
 }
 
 .content{
@@ -83,7 +86,10 @@ header{
     padding:5px;
     margin: 10px;
     font-size:18px;
+    text-decoration: none;text-align: center;
 }
+
+
 
 .div-style{
     /* position: absolute; */

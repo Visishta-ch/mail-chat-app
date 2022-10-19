@@ -1,4 +1,5 @@
 import React, {useRef, useState} from 'react'
+import {Link} from 'react-router-dom';
 // import {useHistory} from 'react-router-dom'
 import styles from './SignUp.module.css'
 
@@ -32,7 +33,7 @@ const SignUp = () => {
         const confirmPswd = cpref.current.value;
 
         console.log('Entered', enteredMail,enteredPassword,confirmPswd);
-setLoading(true);
+        setLoading(true);
          if(enteredPassword !== confirmPswd){
             setError('Confirm password shoul match with password entered');
          }
@@ -67,6 +68,7 @@ setLoading(true);
                     }
             }).then(data=> {
                 console.log('signup successful', data);
+        
             }).catch(error => {
                 alert('error', error)
             })
@@ -91,7 +93,7 @@ setLoading(true);
                     <br/>
                     <button className={styles['signup-btn']}>SignUp</button>
                 </form>
-               {!isLogin && <button  className={styles['login-btn']} onClick={switchAuthModeHandler}>Have an Account? Login</button>}
+               {!isLogin && <Link to='/Login'  className={styles['login-btn']} onClick={switchAuthModeHandler}>Have an Account? Login</Link>}
                {loading && <p className={styles.error}>Sending request to signup</p>}
                
             </div>
