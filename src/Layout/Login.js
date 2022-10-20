@@ -9,8 +9,10 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
-    // const isLoggedin = useSelector(state=> state.auth.isLogin);
-    // console.log(isLoggedin);
+    const isLoggedin = useSelector(state=> state.auth.isLogin);
+    const userToken = useSelector(state=> state.auth.token);
+    console.log('token',userToken);
+     console.log('outside login',isLoggedin);
     const emailRef = useRef();
     const passwordRef = useRef();
     const history = useHistory();
@@ -30,6 +32,7 @@ const Login = () => {
     e.preventDefault();
     const enteredMail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
+    dispatch(authActions.setUserMail(enteredMail))
     // console.log('submit')
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD7IxQwW78e-6m5zIPTWJFNAzZNUEP7UDo',
     {
@@ -59,15 +62,19 @@ const Login = () => {
         }
     }).then(data=>{
         console.log('login successful', data);
+        // console.log('login successful status before', isLoggedin)
+        // console.log('token from redux', userToken)
          dispatch(authActions.login(data.idToken));
-        history.push('/welcome')
+         history.push('/welcome')
+        //  console.log('login successful status', isLoggedin)
+        //  console.log('token from redux after login', userToken)
         // 
         
     }).catch(error=>{
         alert(error);
     })
 
-
+    // history.push('/welcome')
   };
   return (
     <>

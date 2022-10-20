@@ -14,7 +14,10 @@ section{
     align-items:center;
     align-content: center;
     justify-items:center;
-    
+    background-image: url('../bg1.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
     
 }
 
@@ -50,7 +53,7 @@ header{
 
 .form-div input{ 
     width: 100%;
-    height:49px;
+    height:39px;
     
     padding:9px;
     margin:5px;
@@ -64,7 +67,7 @@ header{
 }
 
 .signup-btn{
-    width:90px;
+    width:100%;
     height:35px;
     background-color: rgb(110, 159, 239);
     border: 1px solid #cfcfcf;

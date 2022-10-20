@@ -1,0 +1,35 @@
+*{
+    margin:4px;
+}
+
+.wrapperClassName{
+    display:flex;
+    flex-direction:column;
+   
+}
+
+input{
+    width:100%;
+    border:none;
+    border-bottom: 1px solid #ccc;
+    height:35px;
+}
+.editor{
+    height: 450px;
+    /* background-color:#ccc; */
+}
+
+.btn{
+    width:90px;
+    height:35px;
+    background-color:blue;
+    color:white;
+    font-size:20px;
+    font-family: monospace;
+    border:none;
+    border-radius:5rem;
+    position:absolute;
+    bottom: 0;
+    margin:5px auto;
+
+}

@@ -1,0 +1,15 @@
+.wrapper-class{
+    display: flex;
+    flex-direction: column;
+    top:auto;
+    bottom: 10px;
+}
+
+.editor-class { order: 1;  top:auto;
+    bottom: 10px;}
+
+.toolbar-class { 
+position: absolute;
+bottom: 0;
+}
+
