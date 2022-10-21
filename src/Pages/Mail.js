@@ -2,6 +2,7 @@ import React,{useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import { mailActions } from '../store/mailStore-slice';
+import {authActions} from '../store/auth-slice'
 import { Editor } from 'react-draft-wysiwyg';
 import {EditorState } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -14,7 +15,7 @@ const Mail = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const editorState = EditorState.createEmpty();
+ 
   let [mailingTo, setMailingTo] = useState('');
   // console.log(props.text);
   const [input, setInput] = useState([]);
@@ -30,6 +31,7 @@ const Mail = () => {
 
     console.log(usermail);
   }
+  const editorState = EditorState.createEmpty();
   let message;
     const onEditorStateChange = (event) => {
       message = event.getCurrentContent().getPlainText();
@@ -46,8 +48,10 @@ const Mail = () => {
         message,
       }
     setMailingTo(receiverMail)
+    console.log(receiverMail);
+    dispatch(authActions.setReceiverMail(receiverMail));
     console.log('mailing details: ', mailDetails)
-    sendMail(mailDetails);
+    // sendMail(mailDetails);
     fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Sentbox.json`,
     {
       method:'POST',
@@ -75,38 +79,68 @@ const Mail = () => {
     .catch((err) => {
       alert(err);
     });
-  }
-  // console.log('mailed to: ', mailingTo)
-  let mailTo = mailingTo.replace(regex, '');
-   console.log('mailing to: ', mailTo)
 
-  const existingInput = [...input];
-  async function sendMail(mailDetails) {
-      try{
-        const response = await fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,{
+    let mailTo = receiverMail.replace(regex, '');
+    console.log('mailing to: ', mailTo)
+
+    fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,{
           method: 'POST',
           body: JSON.stringify(
             mailDetails
           ),
           headers :{'Content-Type': 'application/json'} 
-        });      
-        if(response.status === 200){
-          console.log('mailing success');
-          dispatch(mailActions.storeInBox(mailDetails));
-          // existingInput.push(mailDetails);
-          // setInput(existingInput);
-        }
-        else {
-          alert('mailing error');
-        }
-  
-        
-        
-      }catch(error){
-          alert('error from catch ')           
-      }
-
+        }).then((response) => {
+          if(response.status === 200){
+            console.log('mailing success');
+            dispatch(mailActions.storeInBox(mailDetails));
+            // existingInput.push(mailDetails);
+            // setInput(existingInput);
+          }
+          else {
+            alert('mailing error');
+          }
+        })  .then((data) => {
+          // console.log(data.name);
+          // alert("Mail sent successfully...")
+          // history.replace("/Inbox");
+        })
+        .catch((err) => {
+          alert(err);
+        });   
+    
   }
+   console.log('mailed to: ', mailingTo)
+  
+
+  const existingInput = [...input];
+
+  // async function sendMail(mailDetails) {
+  //     try{
+  //       const response = await fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,{
+  //         method: 'POST',
+  //         body: JSON.stringify(
+  //           mailDetails
+  //         ),
+  //         headers :{'Content-Type': 'application/json'} 
+  //       });      
+  //       if(response.status === 200){
+  //         console.log('mailing success');
+  //         dispatch(mailActions.storeInBox(mailDetails));
+  //         // existingInput.push(mailDetails);
+  //         // setInput(existingInput);
+  //       }
+  //       else {
+  //         alert('mailing error');
+  //       } 
+  //     }catch(error){
+  //         alert('error from catch ')           
+  //     }
+
+  // }
+
+
+  // fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`)
+
 
 //   async function inBox(mailDetails) {
 //     try{
@@ -134,9 +168,9 @@ const Mail = () => {
 // }
   return (
     <>
-      <Nav />
+    <Nav />
     <div className={styles.container}>
-      <form onSubmit={sendMailHandler}>
+      <form onSubmit={sendMailHandler} className={styles.form}>
         <input type="email" placeholder="To " ref={sendMailToref} /> <br/>
         <input type="text" placeholder="Subject"  ref={subjectref} /> <br/>
         <div className={styles.editor}>
@@ -157,6 +191,8 @@ const Mail = () => {
           onEditorStateChange={onEditorStateChange}
           
         />
+         {/* <button className={styles.btn}>Send</button> */}
+
         </div>
         <button className={styles.btn}>Send</button>
       </form>

@@ -1,10 +1,11 @@
 import React, {useRef, useState} from 'react'
-import {Link} from 'react-router-dom';
+import {Link, useHistory} from 'react-router-dom';
 // import {useHistory} from 'react-router-dom'
 import styles from './SignUp.module.css'
 
 
 const SignUp = () => {
+    const history = useHistory();
     const emailRef = useRef();
     const passwordRef = useRef();
     const cpref = useRef();
@@ -68,6 +69,7 @@ const SignUp = () => {
                     }
             }).then(data=> {
                 console.log('signup successful', data);
+                history.replace('/Login')
         
             }).catch(error => {
                 alert('error', error)

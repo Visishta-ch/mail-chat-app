@@ -41,9 +41,12 @@ function App() {
      {!isLogin && <Route path='/mail'>
     <Login/>
     </Route>}
-     <Route path='/Inbox'>
+    {isLogin && <Route path='/Inbox'>
       <Inbox/>
-     </Route>
+     </Route>}
+     {!isLogin && <Route path='/Inbox'>
+     <Redirect to='/Login'/>
+     </Route>}
     </Switch>
     </>
   );

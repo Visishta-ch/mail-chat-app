@@ -1,15 +1,23 @@
-.wrapper-class{
-    display: flex;
-    flex-direction: column;
-    top:auto;
-    bottom: 10px;
+.wrapper-class {
+  display: flex;
+  flex-direction: column;
+  top: auto;
+ 
 }
 
-.editor-class { order: 1;  top:auto;
-    bottom: 10px;}
-
-.toolbar-class { 
-position: absolute;
-bottom: 0;
+.editor-class {
+  order: 1;
+  top: auto;
+  bottom: 10px;
 }
 
+.toolbar-class {
+  position: relative; 
+   bottom: -27.5rem;
+   left:6.6rem;
+   width: 850px;
+
+  /* position:absolute;
+  bottom: 0;left: 0; */
+  
+}

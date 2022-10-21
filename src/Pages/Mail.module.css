@@ -1,11 +1,19 @@
-*{
-    margin:4px;
+.container{
+    margin:15px auto;
+    width:65%;
+    border: 1px solid #ccc;
+    /* width: 50%;
+    display: flex;
+    justify-content: center;
+    background-color:pink;
+    align-items: center; */
 }
+
 
 .wrapperClassName{
     display:flex;
     flex-direction:column;
-   
+    position: relative;
 }
 
 input{
@@ -28,8 +36,8 @@ input{
     font-family: monospace;
     border:none;
     border-radius:5rem;
-    position:absolute;
-    bottom: 0;
-    margin:5px auto;
+    position:relative;
+    bottom:8px;
+    left:2px;
 
 }

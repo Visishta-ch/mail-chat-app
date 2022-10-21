@@ -32,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     const enteredMail = emailRef.current.value;
     const enteredPassword = passwordRef.current.value;
-    dispatch(authActions.setUserMail(enteredMail))
+    // dispatch(authActions.setUserMail(enteredMail))
     // console.log('submit')
     fetch('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyD7IxQwW78e-6m5zIPTWJFNAzZNUEP7UDo',
     {
@@ -49,7 +49,8 @@ const Login = () => {
     }).then(res=>{
         if(res.ok){
             console.log('login authenticated')
-           
+           console.log(enteredMail);
+           dispatch(authActions.setUserMail(enteredMail));
             return res.json()
         }else{
             return res.json().then(data=>{
