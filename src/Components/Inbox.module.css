@@ -41,6 +41,16 @@
     width: 100%;
     justify-content: space-between;
     align-items: center;
+    word-wrap: break-word;
+    text-decoration: none;
+    color: black;
+}
+.emailMessage{
+    margin-left:10px;
+    flex:0.8;
+    display: flex;
+    align-items: center;
+
 }
 
 .mailTo{
@@ -48,7 +58,7 @@
     display: flex;
     justify-content: space-evenly;
     gap:10px;
-    
+    font-weight: bold;
 }
 
 .mailTo h3{
@@ -60,11 +70,26 @@
 .mailSubject{
     font-size: 15px;
     color:rgb(11, 9, 9);
+    /* text-overflow: ellipsis; */
+    word-wrap: break-word;
+    width:250px;
+    white-space:nowrap;
+    overflow:hidden;
     text-overflow: ellipsis;
+    padding-left:5px; 
+    padding-right:5px;
+    font-size: 15px;
 
 }
 .mailBody{
     font-size: 15px;
+    /* width: 350px; */
     color:rgb(11, 9, 9);
-    text-overflow: ellipsis;
+    text-overflow:ellipsis;
+    word-wrap: break;
+    padding-left:5px; 
+    padding-right:5px;
+    white-space:nowrap;
+    overflow:hidden;
+    max-width: 100px;
 }

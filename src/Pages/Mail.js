@@ -76,7 +76,7 @@ const Mail = () => {
     .then((data) => {
       console.log(data.name);
       // alert("Mail sent successfully...")
-      history.replace("/Inbox");
+      history.replace("/Sentbox");
     })
     .catch((err) => {
       alert(err);

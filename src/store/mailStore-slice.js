@@ -1,6 +1,6 @@
 import {createSlice}  from '@reduxjs/toolkit';
 
-const initialMails = {mails:[]}
+const initialMails = {mails:[], count:0}
 
 const mailSlice = createSlice({
     name:'mail',
@@ -11,6 +11,10 @@ const mailSlice = createSlice({
         },
         totalMails(state, action){
             state.mails = action.payload
+        },
+
+        setCount(state, action){
+            state.count = action.payload
         }
     }
 })

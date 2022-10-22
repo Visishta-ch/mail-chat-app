@@ -11,30 +11,40 @@ import { SlUser } from 'react-icons/sl';
 import { MdOutlineDuo } from 'react-icons/md';
 
 
-const SideBar = () => {
+const SideBar = ({count, selected}) => {
+  console.log('count from main to sidebar', count)
+
   return (
     <>
          <div className={styles.sidebar}>
         <Link to="/mail" className={styles['sidebar-btn']}>
           <span>
             <TfiPlus />
-          </span>{' '}
+          </span>
           Compose
         </Link>
 
-        <div className={styles['options-list']}>
+        <div className={styles['options-list1']}>
+        <div style={{display:'flex'}}>
           <span className={styles['sidebar-icons']}>
             <RiInboxLine />
           </span>
-          <Link to='/welcome' className={styles.listbtn}>
-            <h3 className={styles.heading3}>Inbox</h3>
+
+          <Link to='/welcome' className={styles.listbtn}   activeClassName = {styles.active}>
+            {/* <div style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}> */}
+            <h3 className={styles.heading3}>Inbox </h3>
+           {/* <span style={{backgroundColor:'#ccc', }}> {count}</span> */}
+           {/* </div> */}
           </Link>
+          </div>
+          <span></span>
+          <span className={styles.count}> {count}</span>
         </div>
         <div className={styles['options-list']}>
           <span className={styles['sidebar-icons']}>
             <RiSendPlaneFill />
           </span>
-          <Link to="/Inbox" className={styles.listbtn}>
+          <Link to="/Sentbox" className={styles.listbtn}>
             <h3 className={styles.heading3}>Sent</h3>
           </Link>
         </div>

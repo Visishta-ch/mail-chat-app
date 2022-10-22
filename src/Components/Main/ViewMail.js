@@ -7,6 +7,8 @@ import {Link, useParams, useLocation, useHistory} from 'react-router-dom';
 import { TfiArrowLeft } from "react-icons/tfi";
 import { BsTrash } from "react-icons/bs";
 import mail from '../../images/mail.jpg'
+import { useSelector } from 'react-redux';
+
 
 
 const ViewMail = (props) => {
@@ -14,6 +16,7 @@ const ViewMail = (props) => {
     const history = useHistory();
     const params = useParams();
     console.log(params)
+    const count = useSelector(state=> state.mail.count);
     const loggedInUser = localStorage.getItem('userMail');
     const location = useLocation();
     const {senderMail, subject, message, id} = location.state;
@@ -50,10 +53,10 @@ const ViewMail = (props) => {
         <Nav/>
         <Header />
         <div className={styles['main-container']}>
-            <SideBar />
+            <SideBar count={count}/>
             <div className={styles.viewSection}>
                 <div className={styles.icon} >
-                    <div><span><TfiArrowLeft/></span> <Link to='/welcome' className={styles.link}>Back</Link></div>
+                    <div className={styles.backbtn}><span><TfiArrowLeft/></span> <Link to='/welcome' className={styles.link}>Back</Link></div>
                    {/* <span><MdOutlineArrowBackIosNew/></span>  */}
                    <button className={styles.deletebtn} onClick={()=>deleteItem(id)}><BsTrash/></button>
                 </div>

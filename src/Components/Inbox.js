@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header/Header';
 import styles from './Inbox.module.css';
-import { useDispatch } from 'react-redux';
+import {Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux';
 import { mailActions } from '../store/mailStore-slice';
 import axios from 'axios';
 import Nav from '../Layout/Nav';
 import SideBar from '../Components/Main/SideBar'
 const Inbox = () => {
   const dispatch = useDispatch();
+  const count = useSelector(state=> state.mail.count);
+  console.log('count of unread mails from dispatch', count)
   const senderMail = localStorage.getItem('userMail');
   let usermail;
   const regex = /[`@.`]/g;
@@ -50,7 +53,7 @@ const Inbox = () => {
       <Header />
       <h1>SentBox</h1>
       <div style={{display: 'flex'}}>
-      <SideBar/>
+      <SideBar count={count}/>
       <div className={styles.container} >
       
         <div className={styles.sentSectionHeader}>
@@ -60,13 +63,24 @@ const Inbox = () => {
           <div className={styles.itemList}>
         
             {mail.map((item) => (
-              <li key={item.id} id={item.id} className={styles.arrayItem}>
+              <Link to={{
+                 pathname: `/welcome/veiwMail/${item.id}`,
+                state: {
+                  senderMail: item.mail,
+                  subject: item.subject,
+                  message: item.message,
+                 id: item.id,
+                },
+              }} key={item.id} id={item.id} className={styles.arrayItem}>
                 <span className={styles.mailTo}>
                     To :
                     <h3>{item.mail}</h3></span>
-                <span className={styles.mailSubject}>{item.subject}</span>
-                <span className={styles.mailBody}>{item.message}</span>
-              </li>
+                    <div className={styles.emailMessage}>
+                    <span className={styles.mailSubject}>{item.subject}</span>
+                    <span className={styles.mailBody}>{item.message}</span>
+                    </div>
+               
+              </Link>
             ))}
           </div>
         )}

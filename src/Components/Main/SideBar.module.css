@@ -35,6 +35,22 @@
     border-bottom-right-radius: 20px;
     color: gray;
 }
+.options-list1{
+    display: flex;
+    align-items: center;
+    height:40px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    color: gray;
+    justify-content: space-between;
+}
+
+.options-list1 h3{
+    flex: 1;margin-left:10px;
+    font-size: 15px;
+    font-weight:400px;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
 
 .sidebar-icons{
     padding:5px;
@@ -45,6 +61,8 @@
     font-weight:400px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
+
+
 .listbtn{
     border:none;background:none;
     color:gray;
@@ -64,6 +82,28 @@
     background: #fcecec;
     color:#c04b37;
 
+}
+.options-list1:hover,
+.options-list1:hover .heading3,
+.options-list1:hover .sidebar-icons{
+    background: #fcecec;
+    color:#c04b37;
+
+}
+
+.active{
+    background: #3fcfe5;
+    color:#c04b37;
+}
+
+.count{
+    display: flex;
+    border-radius:2rem;
+    background-color: coral;
+    width:40px;height:25px;
+    align-items: center;
+    justify-content:center;
+    color:white;
 }
 
 

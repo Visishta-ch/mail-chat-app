@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { mailActions } from '../../store/mailStore-slice';
 import axios from 'axios';
 import styles from './Main.module.css';
-import VeiwMail from './ViewMail';
+// import {useSelector, useDispatch} from 'react-redux' 
 import { SlArrowDown } from 'react-icons/sl';
 import { SlStar } from 'react-icons/sl';
 
@@ -15,11 +15,12 @@ import SideBar from '../Main/SideBar';
 
 const Main = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
+  
   const storedMails = useSelector((state) => state.mail.mails);
   console.log(storedMails);
   const senderMail = localStorage.getItem('userMail');
   let usermail;
+  const [count, setCount] = useState(0);
   const regex = /[`@.`]/g;
   if (senderMail != null) {
     usermail = senderMail.replace(regex, '');
@@ -28,7 +29,7 @@ const Main = () => {
   const [items, setItems] = useState([]);
   
 
-  const [view, setView] = useState(false);
+  // const [view, setView] = useState(false);
   useEffect(() => {
     let responseData;
     const listOfMails = [];
@@ -56,6 +57,17 @@ const Main = () => {
           setItems(listOfMails);
           // dispatch.mailActions.totalMails(listOfMails);
           dispatch(mailActions.storeInBox(listOfMails));
+
+          let len = 0;
+          Object.entries(responseData).forEach((item) => {
+            if(item[1].read === false){
+                len = len + 1;
+                setCount(len);
+
+            }
+              console.log('data read: false count', len);
+              dispatch(mailActions.setCount(len));
+          })
         }
       })
       .catch((error) => {
@@ -76,7 +88,7 @@ const Main = () => {
 
     console.log(updatedItem);
 
-    setView(true);
+    // setView(true);
 
     fetch(
       `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${item.id}.json`,
@@ -100,15 +112,10 @@ const Main = () => {
     // viewMail(item);
   };
 
-  // function viewMail(item){
-  //   // history.push('/ViewMail');
-  //   console.log('item viewed', item);
-
-  // }
 
   return (
     <div className={styles['main-container']}>
-      <SideBar />
+      <SideBar count={count} selected={true}/>
 
       <div className={styles['email-section']}>
         <div className={styles['email-section-left']}>
