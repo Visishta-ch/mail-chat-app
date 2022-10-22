@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { mailActions } from '../store/mailStore-slice';
 import axios from 'axios';
 import Nav from '../Layout/Nav';
+import SideBar from '../Components/Main/SideBar'
 const Inbox = () => {
   const dispatch = useDispatch();
   const senderMail = localStorage.getItem('userMail');
@@ -48,6 +49,8 @@ const Inbox = () => {
       <Nav />
       <Header />
       <h1>SentBox</h1>
+      <div style={{display: 'flex'}}>
+      <SideBar/>
       <div className={styles.container} >
       
         <div className={styles.sentSectionHeader}>
@@ -67,6 +70,7 @@ const Inbox = () => {
             ))}
           </div>
         )}
+      </div>
       </div>
     </div>
   );

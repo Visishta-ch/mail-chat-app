@@ -7,6 +7,7 @@ import SignUp from '../src/Layout/SignUp'
 import Welcome from '../src/Pages/Welcome'
 import Mail from '../src/Pages/Mail'
 import Inbox from './Components/Inbox'
+import ViewMail from './Components/Main/ViewMail'
 
 function App() {
  
@@ -19,6 +20,10 @@ function App() {
   return (
     <>
     <Switch>
+
+    <Route path= '/welcome/veiwMail/:id'>
+          <ViewMail/>
+      </Route>
     <Route path="/" exact>
         {!isLogin &&<SignUp/>}
         {isLogin && <Welcome/>}
@@ -47,6 +52,7 @@ function App() {
      {!isLogin && <Route path='/Inbox'>
      <Redirect to='/Login'/>
      </Route>}
+     
     </Switch>
     </>
   );

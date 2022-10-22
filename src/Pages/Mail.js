@@ -46,6 +46,7 @@ const Mail = () => {
         receiverMail,
         subject,
         message,
+        read:false
       }
     setMailingTo(receiverMail)
     console.log(receiverMail);
@@ -58,7 +59,8 @@ const Mail = () => {
       body: JSON.stringify({
         mail:receiverMail,
         subject: subject,
-        message:message
+        message:message,
+        read:false
       }),
       headers :{'Content-Type': 'application/json'}
     }) .then((resp) => {
@@ -112,60 +114,6 @@ const Mail = () => {
    console.log('mailed to: ', mailingTo)
   
 
-  const existingInput = [...input];
-
-  // async function sendMail(mailDetails) {
-  //     try{
-  //       const response = await fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,{
-  //         method: 'POST',
-  //         body: JSON.stringify(
-  //           mailDetails
-  //         ),
-  //         headers :{'Content-Type': 'application/json'} 
-  //       });      
-  //       if(response.status === 200){
-  //         console.log('mailing success');
-  //         dispatch(mailActions.storeInBox(mailDetails));
-  //         // existingInput.push(mailDetails);
-  //         // setInput(existingInput);
-  //       }
-  //       else {
-  //         alert('mailing error');
-  //       } 
-  //     }catch(error){
-  //         alert('error from catch ')           
-  //     }
-
-  // }
-
-
-  // fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`)
-
-
-//   async function inBox(mailDetails) {
-//     try{
-//       const response = await fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Sentbox.json`,{
-//         method: 'POST',
-//         body: JSON.stringify({
-//           mailDetails
-//         }),
-//         headers :{'Content-Type': 'application/json'} 
-//       });
-//       if(response.status === 200){
-//         console.log('mail sent successfully');
-//         // existingInput.push(mailDetails);
-//         // setInput(existingInput);
-//         history.replace('/Inbox')
-//       }
-//       else {
-//         alert('mailing error');
-//       }
-
-//     }catch(error){
-//         alert('error from catch ')           
-//     }
-
-// }
   return (
     <>
     <Nav />

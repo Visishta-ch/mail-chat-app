@@ -4,7 +4,7 @@
 .main-container{
     display: flex;
 }
-.sidebar{
+/* .sidebar{
     flex: 0.3;
     max-width: 300px;
     padding-right:10px;
@@ -27,7 +27,7 @@
     border-radius:4rem;
     font-size: 15px;
     font-family:Verdana, Geneva, Tahoma, sans-serif;
-}
+} */
 body{
     height:100vh;
     overflow-y: hidden;
@@ -179,6 +179,8 @@ body{
 .arrayItem{
     list-style: none;
     display: flex;
+    text-decoration: none;
+    color: black;
     height: 50px;
     cursor: pointer;
     width: 100%;

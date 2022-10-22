@@ -1,0 +1,77 @@
+.main-container{
+    display: flex;
+    
+}
+
+.viewSection{
+    display: flex;
+    padding:4px;
+    flex-direction: column;
+    /* background-color:#cfcfcf; */
+    width:65%;
+    margin:25px auto;
+}
+
+.viewSection .icon{
+    background-color:whitesmoke;
+    /* border-radius:6px; */
+    size: large;
+    height:23px;
+    color: gray;
+    padding:2px;
+    /* width:120px; */
+    display: flex;
+    justify-content: space-between;
+    /* box-shadow: 0px 5px 5px -2px rgba(0, 0, 0, 0.75); */
+}
+.deletebtn{
+    border:none;
+    cursor: pointer;
+}
+
+.link{
+    text-decoration: none;
+    color: rgb(91, 89, 89);
+}
+
+.main-veiw-content{
+    flex: 1;
+    /* background-color:whitesmoke; */
+    width: 100%;
+    padding: 3px;
+    margin:5px;
+}
+.mailtitle{
+    display:flex;
+    align-content: center;
+    align-items: center;
+}
+
+.inner-container h3{
+    text-transform: capitalize;
+    font-family: Verdana;padding:5px;
+}
+/* .mailFormat {
+    background-color: whitesmoke;
+} */
+ .spanStyle{
+    /* gap: 2px; */
+    font-size:17px; 
+    
+    
+}
+.mailImg{
+    width:35px;
+    height:35px;
+}
+.mailFormat p{
+    font-size: 13px;
+}
+
+.inner-container .msg{
+    position: relative;
+    top:10px;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif
+
+}

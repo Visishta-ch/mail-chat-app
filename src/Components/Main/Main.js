@@ -1,33 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useHistory, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { mailActions } from '../../store/mailStore-slice';
 import axios from 'axios';
 import styles from './Main.module.css';
-import { TfiPlus } from 'react-icons/tfi';
-import { RiInboxLine } from 'react-icons/ri';
-import { RiSendPlaneFill } from 'react-icons/ri';
+import VeiwMail from './ViewMail';
 import { SlArrowDown } from 'react-icons/sl';
 import { SlStar } from 'react-icons/sl';
-import { SlPhone } from 'react-icons/sl';
-import { SlUser } from 'react-icons/sl';
-import { MdOutlineDuo } from 'react-icons/md';
+
 import { SlActionRedo } from 'react-icons/sl';
+import { FcSms } from 'react-icons/fc';
 import { SlOptionsVertical } from 'react-icons/sl';
+import SideBar from '../Main/SideBar';
 
 const Main = () => {
-//   let receiverMailId = useSelector((state) => state.auth.receiverMail);
-//   console.log('sent message to', receiverMailId);
-  
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const storedMails = useSelector((state) => state.mail.mails);
+  console.log(storedMails);
   const senderMail = localStorage.getItem('userMail');
   let usermail;
   const regex = /[`@.`]/g;
   if (senderMail != null) {
     usermail = senderMail.replace(regex, '');
   }
-console.log(usermail);
+  // console.log(usermail);
   const [items, setItems] = useState([]);
-  let responseData;
+  
+
+  const [view, setView] = useState(false);
   useEffect(() => {
+    let responseData;
     const listOfMails = [];
     axios
       .get(
@@ -35,76 +38,77 @@ console.log(usermail);
       )
       .then((response) => {
         responseData = response.data;
-        console.log(response);
+        // console.log(response);
         // dispatch(mailActions.totalMails(responseData));
-        if(responseData !== null){
-            let keys = Object.entries(responseData);
-            console.log(keys);
-            Object.entries(responseData).forEach((item) => {
-                console.log(item);
-              listOfMails.push({
-                id: item[0],
-                mail: item[1].senderMail,
-                subject: item[1].subject,
-                message: item[1].message,
-              });
+        if (responseData !== null) {
+          // let keys = Object.entries(responseData);
+          // console.log(keys);
+          Object.entries(responseData).forEach((item) => {
+            // console.log(item);
+            listOfMails.push({
+              id: item[0],
+              mail: item[1].senderMail,
+              subject: item[1].subject,
+              message: item[1].message,
+              read: item[1].read,
             });
-            setItems(listOfMails);
+          });
+          setItems(listOfMails);
+          // dispatch.mailActions.totalMails(listOfMails);
+          dispatch(mailActions.storeInBox(listOfMails));
         }
-       
       })
       .catch((error) => {
         alert(error);
       });
   }, []);
 
+  const ItemSelected = (item) => {
+    console.log(item);
+
+    const updatedItem = {
+      id: item.id,
+      mail: item.mail,
+      subject: item.subject,
+      message: item.message,
+      read: true,
+    };
+
+    console.log(updatedItem);
+
+    setView(true);
+
+    fetch(
+      `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${item.id}.json`,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(updatedItem),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      }
+    )
+      .then((response) => {
+        response.json().then((data) => {
+          console.log('Editing item successful', data);
+        });
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
+
+    // viewMail(item);
+  };
+
+  // function viewMail(item){
+  //   // history.push('/ViewMail');
+  //   console.log('item viewed', item);
+
+  // }
+
   return (
     <div className={styles['main-container']}>
-      <div className={styles.sidebar}>
-        <Link to="/mail" className={styles['sidebar-btn']}>
-          <span>
-            <TfiPlus />
-          </span>{' '}
-          Compose
-        </Link>
-
-        <div className={styles['options-list']}>
-          <span className={styles['sidebar-icons']}>
-            <RiInboxLine />
-          </span>
-          <Link className={styles.listbtn}>
-            <h3 className={styles.heading3}>Inbox</h3>
-          </Link>
-        </div>
-        <div className={styles['options-list']}>
-          <span className={styles['sidebar-icons']}>
-            <RiSendPlaneFill />
-          </span>
-          <Link to="/Inbox" className={styles.listbtn}>
-            <h3 className={styles.heading3}>Sent</h3>
-          </Link>
-        </div>
-        <div className={styles['options-list']}>
-          <span className={styles['sidebar-icons']}>
-            <SlArrowDown />
-          </span>
-          <button className={styles.listbtn}>
-            <h3 className={styles.heading3}>More</h3>
-          </button>
-        </div>
-
-        <div className={styles.footer}>
-          <span className={styles['footer-icons']}>
-            <SlUser />
-          </span>
-          <span className={styles['footer-icons']}>
-            <SlPhone />
-          </span>
-          <span className={styles['footer-icons']}>
-            <MdOutlineDuo />
-          </span>
-        </div>
-      </div>
+      <SideBar />
 
       <div className={styles['email-section']}>
         <div className={styles['email-section-left']}>
@@ -144,35 +148,50 @@ console.log(usermail);
         {/*promotions section end */}
 
         {/**inbox items list */}
+
         <div className={styles['emailList-list']}>
-          {items.length > 0 && (
-            <div className={styles.emailRow}>
-              <div className={styles['emailRow-options']}>
-                <span>
-                  <input type="checkbox" />
-                </span>
-                <span>
-                  <SlStar />
-                </span>
+          {items.map((item) => (
+            <Link
+              to={{
+                pathname: `/welcome/veiwMail/${item.id}`,
+                state: {
+                  senderMail: item.mail,
+                  subject: item.subject,
+                  message: item.message,
+                 id: item.id,
+                },
+              }}
+
+              key={item.id}
+              id={item.id}
+              className={styles.arrayItem}
+              onClick={() => {
+                ItemSelected(item);
+              }}
+            >  
+              <div className={styles.emailRow}>
+                <div className={styles['emailRow-options']}>
+                  <span>
+                    <input type="checkbox" /> 
+                  </span>
+                  <span>
+                    <SlStar />
+                  </span>
+                  {item.read === false && (
+                    <span>
+                      <FcSms />
+                    </span>
+                  )}
+                </div>
               </div>
-              {items.map((item) => (
-                <li key={item.id} id={item.id}  className={styles.arrayItem}>
-                  <h3 className={styles.title}>{item.mail}</h3>
+              <h3 className={styles.title}>{item.mail}</h3>
 
-                  <div className={styles.emailMessage}>
-                    <h4>{item.subject}</h4>
-                    <p>{item.message}</p>
-                  </div>
-                </li>
-              ))}
-              {/* <h3 className={styles.title}>Youtube</h3> 
-
-            <div className={styles.emailMessage}>
-                <h4>Subject</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur</p>
-            </div> */}
-            </div>
-          )}
+              <div className={styles.emailMessage}>
+                <h4>{item.subject}</h4>
+                <p>{item.message}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </div>
