@@ -3,7 +3,7 @@ import Nav from '../../Layout/Nav'
 import Header from '../../Components/Header/Header'
 import SideBar from './SideBar'
 import styles from './ViewMail.module.css'
-import {Link, useParams, useLocation} from 'react-router-dom';
+import {Link, useParams, useLocation, useHistory} from 'react-router-dom';
 import { TfiArrowLeft } from "react-icons/tfi";
 import { BsTrash } from "react-icons/bs";
 import mail from '../../images/mail.jpg'
@@ -11,15 +11,39 @@ import mail from '../../images/mail.jpg'
 
 const ViewMail = (props) => {
     console.log(props.item)
+    const history = useHistory();
     const params = useParams();
     console.log(params)
     const loggedInUser = localStorage.getItem('userMail');
     const location = useLocation();
     const {senderMail, subject, message, id} = location.state;
     console.log(senderMail,subject,message,id);
+    const loggedInMail = localStorage.getItem('userMail');
+    let usermail;
+    // const [count, setCount] = useState(0);
+    const regex = /[`@.`]/g;
+    if (loggedInMail != null) {
+      usermail = loggedInMail.replace(regex, '');
+    }
+   
 
     const deleteItem = (id) => {
         console.log('deleting item', id)
+        fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${id}.json`,
+        {
+            method:'DELETE',
+
+        }).then((response) => {
+            response.json().then((res)=>{
+                console.log('deleting item');
+                alert('Are you sure? ')
+            })
+        }).catch(error=> {
+            alert(error)
+        })
+        history.replace('/welcome')
+
+
     }
   return (
     <div>
