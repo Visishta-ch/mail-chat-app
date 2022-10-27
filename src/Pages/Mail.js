@@ -63,15 +63,17 @@ const Mail = () => {
     {
       method:'POST',
       body: JSON.stringify({
-        mail:receiverMail,
-        subject: subject,
-        message:message,
-        read:false
+        // mail:receiverMail,
+        // subject: subject,
+        // message:message,
+        // read:false
+        mailDetails
       }),
       headers :{'Content-Type': 'application/json'}
     }).then((resp) => {
       if (resp.ok) {
         console.log("resp1", resp);
+        dispatch(mailActions.storeInBox(mailDetails));
         return resp.json();
       } else {
         return resp.json().then((data) => {
