@@ -1,6 +1,7 @@
-import React from 'react'
-import styles from './SideBar.module.css'
-import { Link} from 'react-router-dom';
+import React from 'react';
+import styles from './SideBar.module.css';
+import {useSelector} from 'react-redux';
+import { NavLink, Link } from 'react-router-dom';
 import { TfiPlus } from 'react-icons/tfi';
 import { RiInboxLine } from 'react-icons/ri';
 import { RiSendPlaneFill } from 'react-icons/ri';
@@ -10,44 +11,45 @@ import { SlPhone } from 'react-icons/sl';
 import { SlUser } from 'react-icons/sl';
 import { MdOutlineDuo } from 'react-icons/md';
 
-
-const SideBar = ({count, selected}) => {
-  console.log('count from main to sidebar', count)
+const SideBar = () => {
+  
+  const unRead = useSelector(state=> state.mail.count);
+  console.log('unread', unRead)
 
   return (
     <>
-         <div className={styles.sidebar}>
-        <Link to="/mail" className={styles['sidebar-btn']}>
+      <div className={styles.sidebar}>
+        <Link to="/mail" className={`${styles['sidebar-btn']}`}>
           <span>
             <TfiPlus />
           </span>
           Compose
         </Link>
 
-        <div className={styles['options-list1']}>
-        <div style={{display:'flex'}}>
-          <span className={styles['sidebar-icons']}>
-            <RiInboxLine />
-          </span>
+        <NavLink to="/welcome" className={`${styles['options-list1']} `}>
+          <div style={{ display: 'flex' }}>
+            <span className={styles['sidebar-icons']}>
+              <RiInboxLine />
+            </span>
 
-          <Link to='/welcome' className={styles.listbtn}   activeClassName = {styles.active}>
-            {/* <div style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}> */}
-            <h3 className={styles.heading3}>Inbox </h3>
-           {/* <span style={{backgroundColor:'#ccc', }}> {count}</span> */}
-           {/* </div> */}
-          </Link>
+            <div className={styles.listbtn} >
+              {/* <div style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}> */}
+              <h3 className={styles.heading3}>Inbox </h3>
+              {/* <span style={{backgroundColor:'#ccc', }}> {count}</span> */}
+              {/* </div> */}
+            </div>
           </div>
           <span></span>
-          <span className={styles.count}> {count}</span>
-        </div>
-        <div className={styles['options-list']}>
+          <span className={styles.count}> {unRead}</span>
+        </NavLink>
+        <NavLink to="/Sentbox" className={styles['options-list']}>
           <span className={styles['sidebar-icons']}>
             <RiSendPlaneFill />
           </span>
-          <Link to="/Sentbox" className={styles.listbtn}>
+          <div className={styles.listbtn}>
             <h3 className={styles.heading3}>Sent</h3>
-          </Link>
-        </div>
+          </div>
+        </NavLink>
         <div className={styles['options-list']}>
           <span className={styles['sidebar-icons']}>
             <SlArrowDown />
@@ -69,9 +71,8 @@ const SideBar = ({count, selected}) => {
           </span>
         </div>
       </div>
-
     </>
-  )
-}
+  );
+};
 
-export default SideBar
+export default SideBar;

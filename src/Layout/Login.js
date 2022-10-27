@@ -97,7 +97,7 @@ const Login = () => {
             <span>{error}</span>
             <br />
             <button className={styles['signup-btn']}>Login</button>
-            <Link to ='/fp' className={styles['login-btn1']} >Forgot Password</Link>
+            <Link to ='/forgetPassword' className={styles['login-btn1']} >Forgot Password</Link>
           </form>
           {!isLogin && (
             <Link

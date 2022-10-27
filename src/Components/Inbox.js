@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from './Header/Header';
 import styles from './Inbox.module.css';
-import {Link } from 'react-router-dom'
+import {NavLink } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { mailActions } from '../store/mailStore-slice';
 import axios from 'axios';
@@ -11,6 +11,8 @@ const Inbox = () => {
   const dispatch = useDispatch();
   const count = useSelector(state=> state.mail.count);
   console.log('count of unread mails from dispatch', count)
+  const storedMails = useSelector(state=> state.mail.mails);
+  console.log(storedMails);
   const senderMail = localStorage.getItem('userMail');
   let usermail;
   const regex = /[`@.`]/g;
@@ -18,7 +20,7 @@ const Inbox = () => {
     usermail = senderMail.replace(regex, '');
   }
 
-  const [mail, setMail] = useState([]);
+  // const [mail, setMail] = useState([]);
   let responseData;
   useEffect(() => {
     const listOfMails = [];
@@ -40,7 +42,8 @@ const Inbox = () => {
             message: item[1].message,
           });
         });
-        setMail(listOfMails);
+        // setMail(listOfMails);
+        dispatch(mailActions.storeInBox(listOfMails));
       })
       .catch((error) => {
         alert(error);
@@ -59,11 +62,11 @@ const Inbox = () => {
         <div className={styles.sentSectionHeader}>
             <h2>primary</h2>
         </div>
-        {mail.length !== 0 && (
+        {storedMails.length !== 0 && (
           <div className={styles.itemList}>
         
-            {mail.map((item) => (
-              <Link to={{
+            {storedMails.map((item) => (
+              <NavLink to={{
                  pathname: `/welcome/veiwMail/${item.id}`,
                 state: {
                   senderMail: item.mail,
@@ -80,7 +83,7 @@ const Inbox = () => {
                     <span className={styles.mailBody}>{item.message}</span>
                     </div>
                
-              </Link>
+              </NavLink>
             ))}
           </div>
         )}

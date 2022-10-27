@@ -34,6 +34,8 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     color: gray;
+    text-decoration: none;
+    
 }
 .options-list1{
     display: flex;
@@ -43,12 +45,16 @@
     border-bottom-right-radius: 20px;
     color: gray;
     justify-content: space-between;
+    text-decoration: none;
+    
 }
 
 .options-list1 h3{
     flex: 1;margin-left:10px;
     font-size: 15px;
     font-weight:400px;
+    text-decoration: none;
+    color: gray;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
@@ -57,6 +63,8 @@
 }
 .options-list h3{
     flex: 1;margin-left:10px;
+    text-decoration: none;
+    color: gray;
     font-size: 15px;
     font-weight:400px;
     font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
@@ -73,7 +81,7 @@
     color: rgb(56, 51, 51);
 }
 .listbtn:active{
-    background:pinkred;
+    background:pink;
 }
 
 .options-list:hover,
@@ -92,7 +100,7 @@
 }
 
 .active{
-    background: #3fcfe5;
+    /* background: #3fcfe5; */
     color:#c04b37;
 }
 
@@ -117,4 +125,9 @@
 .footer-icons{
     margin:7px;
     color: rgb(91, 89, 89);
+}
+
+
+.options-list1.active{
+    color:red;
 }

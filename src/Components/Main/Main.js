@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { mailActions } from '../../store/mailStore-slice';
-import axios from 'axios';
+
 import styles from './Main.module.css';
-// import {useSelector, useDispatch} from 'react-redux' 
+// import {useSelector, useDispatch} from 'react-redux'
 import { SlArrowDown } from 'react-icons/sl';
 import { SlStar } from 'react-icons/sl';
 
@@ -13,68 +13,114 @@ import { FcSms } from 'react-icons/fc';
 import { SlOptionsVertical } from 'react-icons/sl';
 import SideBar from '../Main/SideBar';
 
+import useHttp from '../../hooks/use-http';
+
 const Main = () => {
   const dispatch = useDispatch();
-  
+
   const storedMails = useSelector((state) => state.mail.mails);
   console.log(storedMails);
+
+  // storedMails.map((mail) =>{
+  //   console.log("mails from map function",mail);
+  // })
+
   const senderMail = localStorage.getItem('userMail');
   let usermail;
-  const [count, setCount] = useState(0);
+  const count = 0;
   const regex = /[`@.`]/g;
   if (senderMail != null) {
     usermail = senderMail.replace(regex, '');
   }
-  // console.log(usermail);
-  const [items, setItems] = useState([]);
-  
 
-  // const [view, setView] = useState(false);
+  let { sendRequest: fetchMails } = useHttp();
+
+  let { sendRequest: updateMails } = useHttp();
+
   useEffect(() => {
-    let responseData;
-    const listOfMails = [];
-    axios
-      .get(
-        `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox.json`
-      )
-      .then((response) => {
-        responseData = response.data;
-        // console.log(response);
-        // dispatch(mailActions.totalMails(responseData));
-        if (responseData !== null) {
-          // let keys = Object.entries(responseData);
-          // console.log(keys);
-          Object.entries(responseData).forEach((item) => {
-            // console.log(item);
-            listOfMails.push({
-              id: item[0],
-              mail: item[1].senderMail,
-              subject: item[1].subject,
-              message: item[1].message,
-              read: item[1].read,
-            });
-          });
-          setItems(listOfMails);
-          // dispatch.mailActions.totalMails(listOfMails);
-          dispatch(mailActions.storeInBox(listOfMails));
-
-          let len = 0;
-          Object.entries(responseData).forEach((item) => {
-            if(item[1].read === false){
-                len = len + 1;
-                setCount(len);
-
-            }
-              console.log('data read: false count', len);
-              dispatch(mailActions.setCount(len));
-          })
-        }
-      })
-      .catch((error) => {
-        alert(error);
+    // setInterval(()=>{
+    // getData()
+    const transformTasks = (tasksObj) => {
+      const loadedTasks = [];
+      console.log('task from hook',tasksObj)
+      Object.entries(tasksObj).forEach((item) => {
+         console.log(item)
+        loadedTasks.push({
+          id: item[0],
+          mail: item[1].senderMail,
+          subject: item[1].subject,
+          message: item[1].message,
+          read: item[1].read,
+        });
+        // console.log(loadedTasks)
       });
-  }, []);
+      dispatch(mailActions.storeInBox(loadedTasks));
+      let count;
+      let len = 0;
+      Object.entries(tasksObj).forEach((item) => {
+        if (item[1].read === false) {
+          // len = len + 1;
+          len++;
+          count = len;
+        }
+        // console.log('data read: false count', count);
+        dispatch(mailActions.setCount(count));
+      });
+    };
 
+    fetchMails(
+      {
+        url: `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox.json`,
+      },
+      transformTasks
+    );
+    // },2000)
+
+    //  getData();
+    // sendRequest();
+  }, [fetchMails]);
+
+  // function getData(){
+  //   let responseData;
+  //   const listOfMails = [];
+  //   axios
+  //   .get(
+  //     `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox.json`
+  //   )
+  //   .then((response) => {
+  //     responseData = response.data;
+  //     if (responseData !== null) {
+  //         Object.entries(responseData).forEach((item) => {
+  //         // console.log(item);
+  //         listOfMails.push({
+  //           id: item[0],
+  //           mail: item[1].senderMail,
+  //           subject: item[1].subject,
+  //           message: item[1].message,
+  //           read: item[1].read,
+  //         });
+  //       });
+  //       //  setItems(listOfMails);
+  //       // dispatch.mailActions.totalMails(listOfMails);
+  //       dispatch(mailActions.storeInBox(listOfMails));
+  //       let count;
+  //       let len = 0;
+  //       Object.entries(responseData).forEach((item) => {
+  //         if(item[1].read === false){
+  //             // len = len + 1;
+  //             len++;
+  //             count = len;
+
+  //         }
+  //           console.log('data read: false count', count);
+  //           dispatch(mailActions.setCount(count));
+  //       })
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     alert(error);
+  //   });
+  // }
   const ItemSelected = (item) => {
     console.log(item);
 
@@ -87,35 +133,46 @@ const Main = () => {
     };
 
     console.log(updatedItem);
-
+    const update = (data) => {
+      console.log('data updated',data);
+    };
     // setView(true);
-
-    fetch(
-      `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${item.id}.json`,
+    updateMails(
       {
+        url: `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${item.id}.json`,
         method: 'PATCH',
-        body: JSON.stringify(updatedItem),
+        body: updatedItem,
         headers: {
           'Content-type': 'application/json',
         },
-      }
-    )
-      .then((response) => {
-        response.json().then((data) => {
-          console.log('Editing item successful', data);
-        });
-      })
-      .catch((err) => {
-        alert(err.message);
-      });
+      },
+      update
+    );
+    // fetch(
+    //   `https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${item.id}.json`,
+    //   {
+    //     method: 'PATCH',
+    //     body: JSON.stringify(updatedItem),
+    //     headers: {
+    //       'Content-type': 'application/json',
+    //     },
+    //   }
+    // )
+    //   .then((response) => {
+    //     response.json().then((data) => {
+    //       console.log('Editing item successful', data);
+    //     });
+    //   })
+    //   .catch((err) => {
+    //     alert(err.message);
+    //   });
 
     // viewMail(item);
   };
 
-
   return (
     <div className={styles['main-container']}>
-      <SideBar count={count} selected={true}/>
+      <SideBar count={count} selected={true} />
 
       <div className={styles['email-section']}>
         <div className={styles['email-section-left']}>
@@ -157,29 +214,32 @@ const Main = () => {
         {/**inbox items list */}
 
         <div className={styles['emailList-list']}>
-          {items.map((item) => (
-            <Link
+        {console.log('storedmails ',storedMails)}
+          { storedMails && storedMails.map((item) => (
+          
+            
+            
+            <NavLink
               to={{
                 pathname: `/welcome/veiwMail/${item.id}`,
                 state: {
                   senderMail: item.mail,
                   subject: item.subject,
                   message: item.message,
-                 id: item.id,
+                  id: item.id,
                 },
               }}
-
               key={item.id}
               id={item.id}
               className={styles.arrayItem}
               onClick={() => {
                 ItemSelected(item);
               }}
-            >  
+            >
               <div className={styles.emailRow}>
                 <div className={styles['emailRow-options']}>
                   <span>
-                    <input type="checkbox" /> 
+                    <input type="checkbox" />
                   </span>
                   <span>
                     <SlStar />
@@ -197,8 +257,8 @@ const Main = () => {
                 <h4>{item.subject}</h4>
                 <p>{item.message}</p>
               </div>
-            </Link>
-          ))}
+            </NavLink> 
+          ))} 
         </div>
       </div>
     </div>

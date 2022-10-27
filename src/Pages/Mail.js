@@ -1,6 +1,6 @@
 import React,{useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {useHistory} from 'react-router-dom';
+import {useHistory, Prompt } from 'react-router-dom';
 import { mailActions } from '../store/mailStore-slice';
 import {authActions} from '../store/auth-slice'
 import { Editor } from 'react-draft-wysiwyg';
@@ -12,13 +12,12 @@ import './editor.css';
 import styles from './Mail.module.css'
 
 const Mail = () => {
-  const history = useHistory();
+   const history = useHistory();
   const dispatch = useDispatch();
-
+  // const [formactiveState, setFormActiveState] = useState(false)
  
   let [mailingTo, setMailingTo] = useState('');
-  // console.log(props.text);
-  const [input, setInput] = useState([]);
+  // console.log(props.text
   const sendMailToref = useRef();
   const subjectref = useRef();
   // const messageref = useRef();
@@ -37,6 +36,13 @@ const Mail = () => {
       message = event.getCurrentContent().getPlainText();
   };
 
+  // const stateActivateHandler = () => {
+  //   setFormActiveState(true);
+  //   console.log('focused')
+  // }
+  // const changePromptStateHandler = () => {
+  //   setFormActiveState(false);
+  // }
   const sendMailHandler = (e) => {
     e.preventDefault();
     const receiverMail = sendMailToref.current.value;
@@ -51,7 +57,7 @@ const Mail = () => {
     setMailingTo(receiverMail)
     console.log(receiverMail);
     dispatch(authActions.setReceiverMail(receiverMail));
-    console.log('mailing details: ', mailDetails)
+    console.log('mailing details: ', mailDetails);
     // sendMail(mailDetails);
     fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Sentbox.json`,
     {
@@ -63,7 +69,7 @@ const Mail = () => {
         read:false
       }),
       headers :{'Content-Type': 'application/json'}
-    }) .then((resp) => {
+    }).then((resp) => {
       if (resp.ok) {
         console.log("resp1", resp);
         return resp.json();
@@ -75,17 +81,18 @@ const Mail = () => {
     })
     .then((data) => {
       console.log(data.name);
-      // alert("Mail sent successfully...")
-      history.replace("/Sentbox");
+      console.log("Mail sent successfully...")
+        history.push("/welcome");
     })
     .catch((err) => {
       alert(err);
     });
 
     let mailTo = receiverMail.replace(regex, '');
-    console.log('mailing to: ', mailTo)
+    console.log('mailing to:',mailTo)
 
-    fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,{
+    fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${mailTo}Inbox.json`,
+    {
           method: 'POST',
           body: JSON.stringify(
             mailDetails
@@ -95,20 +102,24 @@ const Mail = () => {
           if(response.status === 200){
             console.log('mailing success');
             dispatch(mailActions.storeInBox(mailDetails));
+            return response.json()
             // existingInput.push(mailDetails);
             // setInput(existingInput);
           }
           else {
-            alert('mailing error');
+             return response.json()
+            // alert('mailing error');
           }
-        })  .then((data) => {
-          // console.log(data.name);
+        }).then((data) => {
+          console.log('data sent successfully',data);
           // alert("Mail sent successfully...")
-          // history.replace("/Inbox");
-        })
+           history.replace("/welcome");
+                 })
         .catch((err) => {
           alert(err);
-        });   
+        }); 
+        
+ 
     
   }
    console.log('mailed to: ', mailingTo)
@@ -116,9 +127,10 @@ const Mail = () => {
 
   return (
     <>
+    
     <Nav />
     <div className={styles.container}>
-      <form onSubmit={sendMailHandler} className={styles.form}>
+      <form  onSubmit={sendMailHandler} className={styles.form}>
         <input type="email" placeholder="To " ref={sendMailToref} /> <br/>
         <input type="text" placeholder="Subject"  ref={subjectref} /> <br/>
         <div className={styles.editor}>
@@ -142,7 +154,7 @@ const Mail = () => {
          {/* <button className={styles.btn}>Send</button> */}
 
         </div>
-        <button className={styles.btn}>Send</button>
+        <button className={styles.btn} >Send</button>
       </form>
       </div>
     </>
