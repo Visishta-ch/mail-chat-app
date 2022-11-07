@@ -1,7 +1,7 @@
 import React,{useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory, Prompt } from 'react-router-dom';
-import { mailActions } from '../store/mailStore-slice';
+
 import {authActions} from '../store/auth-slice'
 import { Editor } from 'react-draft-wysiwyg';
 import {EditorState } from 'draft-js'
@@ -12,18 +12,19 @@ import './editor.css';
 import styles from './Mail.module.css'
 
 const Mail = () => {
-   const history = useHistory();
+  const history = useHistory();
   const dispatch = useDispatch();
-  // const [formactiveState, setFormActiveState] = useState(false)
- 
+  const [formactiveState, setFormActiveState] = useState(false)
   let [mailingTo, setMailingTo] = useState('');
-  // console.log(props.text
   const sendMailToref = useRef();
   const subjectref = useRef();
-  // const messageref = useRef();
   const senderMail = localStorage.getItem('userMail');
   let usermail;
   const regex = /[`@.`]/g;
+
+  const focusedHandler = () => {
+    setFormActiveState(true);
+  }
   if (senderMail != null) {
     
     usermail = senderMail.replace(regex, '');
@@ -36,13 +37,6 @@ const Mail = () => {
       message = event.getCurrentContent().getPlainText();
   };
 
-  // const stateActivateHandler = () => {
-  //   setFormActiveState(true);
-  //   console.log('focused')
-  // }
-  // const changePromptStateHandler = () => {
-  //   setFormActiveState(false);
-  // }
   const sendMailHandler = (e) => {
     e.preventDefault();
     const receiverMail = sendMailToref.current.value;
@@ -63,17 +57,13 @@ const Mail = () => {
     {
       method:'POST',
       body: JSON.stringify({
-        // mail:receiverMail,
-        // subject: subject,
-        // message:message,
-        // read:false
-        mailDetails
+          mailDetails
       }),
       headers :{'Content-Type': 'application/json'}
     }).then((resp) => {
       if (resp.ok) {
         console.log("resp1", resp);
-        dispatch(mailActions.storeInBox(mailDetails));
+        // dispatch(mailActions.storeInBox(mailDetails));
         return resp.json();
       } else {
         return resp.json().then((data) => {
@@ -103,14 +93,11 @@ const Mail = () => {
         }).then((response) => {
           if(response.status === 200){
             console.log('mailing success');
-            dispatch(mailActions.storeInBox(mailDetails));
-            return response.json()
-            // existingInput.push(mailDetails);
-            // setInput(existingInput);
+             return response.json()
+            
           }
           else {
              return response.json()
-            // alert('mailing error');
           }
         }).then((data) => {
           console.log('data sent successfully',data);
@@ -126,17 +113,21 @@ const Mail = () => {
   }
    console.log('mailed to: ', mailingTo)
   
+   const doneEnteringHandler = () => {
+      setFormActiveState(false);
+   }
 
   return (
     <>
     
     <Nav />
     <div className={styles.container}>
-      <form  onSubmit={sendMailHandler} className={styles.form}>
+    <Prompt when={formactiveState} message={(location)=> "Do you really want to leave the Page...All the data entered will be lost "}/>
+      <form  onSubmit={sendMailHandler} className={styles.form} onFocus={focusedHandler}>
         <input type="email" placeholder="To " ref={sendMailToref} /> <br/>
         <input type="text" placeholder="Subject"  ref={subjectref} /> <br/>
         <div className={styles.editor}>
-        {/* <TextEditor onEditorStateChange={onEditorStateChange} /> */}
+    
         <Editor
           EditorState={editorState}
           wrapperClassName="wrapper-class"
@@ -156,7 +147,7 @@ const Mail = () => {
          {/* <button className={styles.btn}>Send</button> */}
 
         </div>
-        <button className={styles.btn} >Send</button>
+        <button className={styles.btn} onClick={doneEnteringHandler}>Send</button>
       </form>
       </div>
     </>
