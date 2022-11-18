@@ -11,9 +11,10 @@ import { SlPhone } from 'react-icons/sl';
 import { SlUser } from 'react-icons/sl';
 import { MdOutlineDuo } from 'react-icons/md';
 
-const SideBar = () => {
-  
-  const unRead = useSelector(state=> state.mail.count);
+const SideBar = (props) => {
+  console.log(props.count)
+  const totalUnread = props.count
+  const unRead = useSelector(state => state.mail.count);
   console.log('unread', unRead)
 
   return (
@@ -40,7 +41,7 @@ const SideBar = () => {
             </div>
           </div>
           <span></span>
-          <span className={styles.count}> {unRead}</span>
+          <span className={styles.count}>{unRead}</span>
         </NavLink>
         <NavLink to="/Sentbox" className={styles['options-list']}>
           <span className={styles['sidebar-icons']}>

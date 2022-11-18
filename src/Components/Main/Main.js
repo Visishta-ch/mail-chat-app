@@ -15,19 +15,18 @@ const Main = () => {
 
   const storedMails = useSelector((state) => state.mail.mails);
   console.log(storedMails);
-
-  // storedMails.map((mail) =>{
-  //   console.log("mails from map function",mail);
-  // })
-
+  const mail = useSelector((state) => state.auth.userMail);
+  console.log("login mail ",mail);
+  const unRead = useSelector(state => state.mail.count);
+  console.log('unread', unRead)
   const senderMail = localStorage.getItem('userMail');
   let usermail;
-  const count = 0;
+  // const count = 0;
   const regex = /[`@.`]/g;
-  if (senderMail != null) {
+  if (senderMail != null ) {
     usermail = senderMail.replace(regex, '');
   }
-
+console.log(usermail);
   let { sendRequest: fetchMails } = useHttp();
 
   let { sendRequest: updateMails } = useHttp();
@@ -37,18 +36,18 @@ const Main = () => {
     const transformTasks = (tasksObj) => {
       const loadedTasks = [];
       console.log('task from hook',tasksObj)
-      Object.entries(tasksObj).forEach((item) => {
+     {tasksObj!==null && Object.entries(tasksObj).forEach((item) => {
          console.log(item)
         loadedTasks.push({
           id: item[0],
           mail: item[1].senderMail,
           subject: item[1].subject,
-          message: item[1].message,
+          message: item[1].msg,
           read: item[1].read,
         });
-        // console.log(loadedTasks)
+        console.log(loadedTasks)
       });
-      dispatch(mailActions.storeInBox(loadedTasks));
+      dispatch(mailActions.totalMails(loadedTasks));
       let count;
       let len = 0;
       Object.entries(tasksObj).forEach((item) => {
@@ -60,7 +59,7 @@ const Main = () => {
         // console.log('data read: false count', count);
         dispatch(mailActions.setCount(count));
       });
-    };
+    }};
 
     fetchMails(
       {
@@ -69,7 +68,7 @@ const Main = () => {
       transformTasks
     );
     
-  }, [fetchMails]);
+  }, [fetchMails, mail]);
 
   const ItemSelected = (item) => {
     console.log(item);
@@ -78,7 +77,7 @@ const Main = () => {
       id: item.id,
       mail: item.mail,
       subject: item.subject,
-      message: item.message,
+      message: item.msg,
       read: true,
     };
 
@@ -103,14 +102,14 @@ const Main = () => {
 
   return (
     <div className={styles['main-container']}>
-      <SideBar count={count} selected={true} />
+      <SideBar count={unRead} selected={true} />
 
       <div className={styles['email-section']}>
       <Icons />
       
        <div className={styles['emailList-list']}>
         {console.log('storedmails ',storedMails)}
-          { storedMails && storedMails.map((item) => (
+          { mail && storedMails && storedMails.map((item) => (
           
             
             
@@ -134,7 +133,7 @@ const Main = () => {
               <div className={styles.emailRow}>
                 <div className={styles['emailRow-options']}>
                   <span>
-                    <input type="checkbox" />
+                    <input type="checkbox" id={item.id}/>
                   </span>
                   <span>
                     <SlStar />

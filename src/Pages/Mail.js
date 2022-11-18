@@ -14,6 +14,7 @@ import styles from './Mail.module.css'
 const Mail = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const [msg,setMsg] = useState('')
   const [formactiveState, setFormActiveState] = useState(false)
   let [mailingTo, setMailingTo] = useState('');
   const sendMailToref = useRef();
@@ -33,21 +34,31 @@ const Mail = () => {
   }
   const editorState = EditorState.createEmpty();
   let message;
+  
     const onEditorStateChange = (event) => {
       message = event.getCurrentContent().getPlainText();
+      // message = event.getCurrentContent()
+      console.log(message);
+      setMsg(message);
+      // msg = message;
+      // console.log(msg);
   };
+
+  console.log(message);
 
   const sendMailHandler = (e) => {
     e.preventDefault();
     const receiverMail = sendMailToref.current.value;
-    const subject = subjectref.current.value;    
+    const subject = subjectref.current.value;   
+    
     const mailDetails = {
         senderMail,
         receiverMail,
         subject,
-        message,
+        msg,
         read:false
       }
+      console.log(mailDetails);
     setMailingTo(receiverMail)
     console.log(receiverMail);
     dispatch(authActions.setReceiverMail(receiverMail));
@@ -63,7 +74,7 @@ const Mail = () => {
     }).then((resp) => {
       if (resp.ok) {
         console.log("resp1", resp);
-        // dispatch(mailActions.storeInBox(mailDetails));
+        
         return resp.json();
       } else {
         return resp.json().then((data) => {

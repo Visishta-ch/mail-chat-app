@@ -15,20 +15,25 @@ const authSlice = createSlice({
             const token = action.payload;
             state.token = token;
             state.isLogin = !state.isLogin; 
-            console.log(state.token)
+           // console.log(state.token)
             localStorage.setItem('tokenId', action.payload)
         },
-        logout(state,action){
+        logout(state){
             state.isLogin = false;
             localStorage.removeItem('tokenId')
             localStorage.removeItem('userMail')
             localStorage.removeItem('receiverMail')
+            state.userMail=''
+             state.token= ''
+            // state.receiverMail=''
         },
         setUserMail(state,action){
             localStorage.setItem('userMail', action.payload)
+            state.userMail = action.payload
 
         },
         isLoginAuthenticated(state){
+        
           if(localStorage.getItem('tokenId')){
             state.isLogin = true;
             state.token = localStorage.getItem('tokenId');

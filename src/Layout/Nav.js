@@ -6,13 +6,19 @@ import {authActions} from '../store/auth-slice'
 
 const Nav = () => {
     const mail = localStorage.getItem('userMail');
+   
     const dispatch = useDispatch();
     const history = useHistory();
-    const logoutHandler =()=>{
+    
+    const logoutHandler=()=>{
+      window.location.reload(true);
         dispatch(authActions.logout());
+        // alert('logging out')
         history.push('/Login')
-        console.log('user logged out')
+       
     }
+    
+    
   return (
     <>  <div>
          <nav className={styles.nav}>

@@ -10,9 +10,8 @@ import mail from '../../images/mail.jpg'
 import { useSelector } from 'react-redux';
 
 
-
-const ViewMail = (props) => {
-    console.log(props.item)
+const SentboxVeiw = (props) => {
+    console.log(props)
     const history = useHistory();
     const params = useParams();
     console.log(params)
@@ -29,10 +28,9 @@ const ViewMail = (props) => {
       usermail = loggedInMail.replace(regex, '');
     }
    
-
     const deleteItem = (id) => {
-        console.log('deleting item', id)
-        fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Inbox/${id}.json`,
+        console.log('deleting item from sentBox', id)
+        fetch(`https://mailchat-fd967-default-rtdb.firebaseio.com/mail/${usermail}Sentbox/${id}/mailDetails.json`,
         {
             method:'DELETE',
 
@@ -40,12 +38,12 @@ const ViewMail = (props) => {
             response.json().then((res)=>{
                 console.log('deleting item');
                 alert('Are you sure? ')
-                history.replace('/welcome')
+                history.replace('/Sentbox')
             })
         }).catch(error=> {
             alert(error)
         })
-        //  history.replace('/welcome')
+        // history.replace('/Sentbox')
 
 
     }
@@ -83,4 +81,4 @@ const ViewMail = (props) => {
   )
 }
 
-export default ViewMail
+export default SentboxVeiw

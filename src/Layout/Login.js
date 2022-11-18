@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styles from './Login.module.css';
 import {useSelector, useDispatch} from 'react-redux'
 import {authActions} from '../store/auth-slice'
@@ -11,22 +11,24 @@ const Login = () => {
 
     const isLoggedin = useSelector(state=> state.auth.isLogin);
     const userToken = useSelector(state=> state.auth.token);
+    const loggedInMail = useSelector(state=> state.auth.userMail)
+    console.log('usermail',loggedInMail)
     console.log('token',userToken);
-     console.log('outside login',isLoggedin);
+    console.log(' login status from Slice',isLoggedin);
     const emailRef = useRef();
     const passwordRef = useRef();
     const history = useHistory();
-  
-
+ 
   const [isLogin, setIsLogin] = useState(false);
 
   const [error, setError] = useState('');
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
-    console.log('loginin')
-    // history.push('/Login');
-}
+   }
+  //  useEffect(()=>{
+  //   console.log('isLogin',isLoggedin)
+  //  },[isLoggedin])
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -48,8 +50,8 @@ const Login = () => {
         }
     }).then(res=>{
         if(res.ok){
-            console.log('login authenticated')
-           console.log(enteredMail);
+          //   console.log('login authenticated')
+          //  console.log(enteredMail);
            dispatch(authActions.setUserMail(enteredMail));
             return res.json()
         }else{
@@ -62,20 +64,16 @@ const Login = () => {
             })
         }
     }).then(data=>{
-        console.log('login successful', data);
-        // console.log('login successful status before', isLoggedin)
-        // console.log('token from redux', userToken)
+        // console.log('login successful', data);
+        // console.log('email', data.email);
+        dispatch(authActions.setUserMail(data.email));
          dispatch(authActions.login(data.idToken));
          history.push('/welcome')
-        //  console.log('login successful status', isLoggedin)
-        //  console.log('token from redux after login', userToken)
-        // 
         
     }).catch(error=>{
         alert(error);
     })
 
-    // history.push('/welcome')
   };
   return (
     <>

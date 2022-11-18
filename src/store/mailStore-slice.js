@@ -1,13 +1,13 @@
 import {createSlice}  from '@reduxjs/toolkit';
 
-const initialMails = {mails:[], count:0}
+const initialMails = {mails:[], inmails:[], count:0}
 
 const mailSlice = createSlice({
     name:'mail',
     initialState: initialMails,
     reducers:{ 
         storeInBox(state, action){
-                state.mails = action.payload
+                state.inmails = action.payload
         },
         totalMails(state, action){
             state.mails = action.payload
